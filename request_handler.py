@@ -53,7 +53,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         """Handle Get requests to the server"""
         pass
 
-
     def do_POST(self):
         """Make a post request to the server"""
         self._set_headers(201)
