@@ -11,6 +11,12 @@ CREATE TABLE "Users" (
   "active" bit
 );
 
+INSERT INTO Users VALUES (null, "Googly", "Moogly", "googly@moogly.com", 
+"no", "googly", "password", null, "2023-04-21 13:15:18.481634", 1);
+INSERT INTO User VALUES (null, "Eric", "Frey", "ericlfrey@elf.com", 
+"just a coder", "elfrey", "elfrey", "NULL", "2023-04-21 13:15:18.481634", 1);
+
+
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
   "admin_id" INTEGER,
@@ -87,9 +93,11 @@ INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
-INSERT INTO Posts VALUES (null, 1, 1, 'test', '1/6/2023', 'test content')
+DROP TABLE Posts
+INSERT INTO Posts VALUES (null, 1, 1, 'test', '1/6/2023', 'test content');
 INSERT INTO Posts VALUES (null, 1, 1, 'test2', '1/8/2023', 'test content2');
 INSERT INTO Posts VALUES (null, 1, 1, 'test3', '1/7/2023', 'test content3');
+
 
 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
@@ -99,3 +107,4 @@ INSERT INTO Posts VALUES (null, 1, 1, 'test3', '1/7/2023', 'test content3');
   "image_url" varchar,
   "content" varchar,
   "approved" bit,
+
