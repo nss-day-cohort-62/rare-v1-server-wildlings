@@ -36,9 +36,7 @@ CREATE TABLE "Posts" (
   "category_id" INTEGER,
   "title" varchar,
   "publication_date" date,
-  "image_url" varchar,
   "content" varchar,
-  "approved" bit,
   FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
 );
 
@@ -88,3 +86,16 @@ CREATE TABLE "Categories" (
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+
+INSERT INTO Posts VALUES (null, 1, 1, 'test', '1/6/2023', 'test content')
+INSERT INTO Posts VALUES (null, 1, 1, 'test2', '1/8/2023', 'test content2');
+INSERT INTO Posts VALUES (null, 1, 1, 'test3', '1/7/2023', 'test content3');
+
+"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "user_id" INTEGER,
+  "category_id" INTEGER,
+  "title" varchar,
+  "publication_date" date,
+  "image_url" varchar,
+  "content" varchar,
+  "approved" bit,
