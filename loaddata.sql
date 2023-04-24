@@ -144,3 +144,8 @@ INSERT INTO Users VALUES (null, "Alice", "Lee", "alicelee@example.com",
 INSERT INTO Categories VALUES (null, 'General');
 INSERT INTO Categories VALUES (null, 'Travel');
 INSERT INTO Categories VALUES (null, 'Lifestyle');
+
+INSERT INTO Tags ('label') VALUES ('CSS');
+INSERT INTO Tags ('label') VALUES ('React');
+INSERT INTO Tags ('label') VALUES ('Python');
+INSERT INTO Tags ('label') VALUES ('IceCream');
