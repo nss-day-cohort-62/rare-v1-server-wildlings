@@ -68,3 +68,66 @@ def get_all_posts():
             posts.append(post.__dict__)
 
     return posts
+
+def get_single_post(id):
+    """get a single post"""
+    # Open a connection to the database
+    with sqlite3.connect("./db.sqlite3") as conn:
+
+        # Just use these. It's a Black Box.
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT 
+            p.id,
+            p.title,
+            p.publication_date,
+            p.content,
+            c.id category_id,
+            c.label,
+            u.id user_id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+        FROM Posts p 
+        JOIN Categories c 
+            ON c.id = p.category_id
+        JOIN Users u 
+            ON u.id = p.user_id
+        WHERE p.id = ?
+        ORDER BY p.publication_date DESC 
+        """, ( id , ))
+
+        # Convert rows of data into a Python list
+        data = db_cursor.fetchone()
+
+        # Iterate list of data returned from database
+
+        post = Post(
+            data['id'],
+            data['user_id'],
+            data['category_id'],
+            data['title'],
+            data['publication_date'],
+            data['content']
+        )
+
+        category = Category(data["category_id"], data["label"])
+
+        user = User(data["user_id"], data["first_name"], data["last_name"], data["email"], data["bio"], 
+                    data["username"], data["password"], data["profile_image_url"], data["created_on"], data["active"])
+        
+        post.category = category.__dict__
+
+        post.user = user.__dict__
+
+
+    return post.__dict__
