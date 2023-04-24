@@ -1,5 +1,5 @@
 import sqlite3
-from models import Post
+from models import Post, Category, User
 
 
 def get_all_posts():
@@ -13,14 +13,29 @@ def get_all_posts():
 
         # Write the SQL query to get the information you want
         db_cursor.execute("""
-        SELECT
+        SELECT 
             p.id,
-            p.user_id,
-            p.category_id,
             p.title,
             p.publication_date,
-            p.content
-        FROM posts p
+            p.content,
+            c.id category_id,
+            c.label,
+            u.id user_id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.profile_image_url,
+            u.created_on,
+            u.active
+        FROM Posts p 
+        JOIN Categories c 
+            ON c.id = p.category_id
+        JOIN Users u 
+            ON u.id = p.user_id
+        ORDER BY p.publication_date DESC 
         """)
 
         # Initialize an empty list to hold all customer representations
@@ -40,6 +55,15 @@ def get_all_posts():
                 row['publication_date'],
                 row['content']
             )
+
+            category = Category(row["category_id"], row["label"])
+
+            user = User(row["user_id"], row["first_name"], row["last_name"], row["email"], row["bio"], 
+                        row["username"], row["password"], row["profile_image_url"], row["created_on"], row["active"])
+            
+            post.category = category.__dict__
+
+            post.user = user.__dict__
 
             posts.append(post.__dict__)
 

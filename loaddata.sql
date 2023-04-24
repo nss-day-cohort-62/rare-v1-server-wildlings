@@ -98,13 +98,17 @@ INSERT INTO Posts VALUES (null, 1, 1, 'test', '1/6/2023', 'test content');
 INSERT INTO Posts VALUES (null, 1, 1, 'test2', '1/8/2023', 'test content2');
 INSERT INTO Posts VALUES (null, 1, 1, 'test3', '1/7/2023', 'test content3');
 
-
-"id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "user_id" INTEGER,
-  "category_id" INTEGER,
-  "title" varchar,
-  "publication_date" date,
-  "image_url" varchar,
-  "content" varchar,
-  "approved" bit,
-
+SELECT 
+  p.id,
+  p.title,
+  p.publication_date,
+  p.content,
+  c.label,
+  u.first_name,
+  u.last_name
+FROM Posts p 
+JOIN Categories c 
+  ON c.id = p.category_id
+JOIN Users u 
+  ON u.id = p.user_id
+ORDER BY p.publication_date DESC
