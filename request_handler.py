@@ -67,7 +67,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # If the path does not include a query parameter, continue with the original if block
         if '?' not in self.path:
-            (resource, id, query_params) = parsed
+            (resource, id, _) = parsed
 
             if resource == "posts":
                 if id is not None:
@@ -77,7 +77,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_all_posts()
 
         else:  # There is a ? in the path, run the query param functions
-            (resource, id, query_params) = parsed
+            (resource, id, _) = parsed
             pass
             # if resource == 'animals':
             #     response = get_all_animals(query_params)
@@ -90,7 +90,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url(self.path)
+        (resource, _, _) = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)
