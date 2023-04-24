@@ -1,9 +1,9 @@
 import sqlite3
-from models import Category
+from models import Tag
 
 
-def get_all_categories():
-    """gets all the categories"""
+def get_all_tags():
+    """gets all the tags"""
     # Open a connection to the database
     with sqlite3.connect("./db.sqlite3") as conn:
 
@@ -14,14 +14,14 @@ def get_all_categories():
         # Write the SQL query to get the information you want
         db_cursor.execute("""
         SELECT 
-            c.id,
-            c.label
-        FROM categories c
-        ORDER BY c.label ASC
+          t.id,
+          t.label
+        FROM tags t
+        ORDER BY t.label ASC
         """)
 
         # Initialize an empty list to hold all customer representations
-        categories = []
+        tags = []
 
         # Convert rows of data into a Python list
         dataset = db_cursor.fetchall()
@@ -29,11 +29,11 @@ def get_all_categories():
         # Iterate list of data returned from database
         for row in dataset:
 
-            category = Category(
+            tag = Tag(
                 row['id'],
                 row['label']
             )
 
-            categories.append(category.__dict__)
+            tags.append(tag.__dict__)
 
-    return categories
+    return tags
