@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
-from views import get_all_posts
+from views import get_all_posts, get_single_post
 from views.user import create_user, login_user
 
 
@@ -71,8 +71,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "posts":
                 if id is not None:
-                    # response = get_single_animal(id)
-                    pass
+                    response = get_single_post(id)
+
                 else:
                     response = get_all_posts()
 
@@ -90,7 +90,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        (resource, _, _) = self.parse_url(self.path)
+        (resource, id, query_params) = self.parse_url(self.path)
 
         if resource == 'login':
             response = login_user(post_body)

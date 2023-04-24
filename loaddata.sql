@@ -120,5 +120,17 @@ INSERT INTO Posts VALUES (null, 4, 3, 'Travel Hacks', '6/1/2023', 'Save money an
 INSERT INTO Posts VALUES (null, 5, 2, 'Gardening Tips', '5/15/2023', 'Get your garden ready for summer with these expert tips.');
 INSERT INTO Posts VALUES (null, 2, 1, 'Job Openings', '4/1/2023', 'We are hiring! Check out our latest job openings and apply today.');
 
-
-
+SELECT 
+  p.id,
+  p.title,
+  p.publication_date,
+  p.content,
+  c.label,
+  u.first_name,
+  u.last_name
+FROM Posts p 
+JOIN Categories c 
+  ON c.id = p.category_id
+JOIN Users u 
+  ON u.id = p.user_id
+ORDER BY p.publication_date DESC
