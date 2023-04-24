@@ -139,3 +139,35 @@ JOIN Categories c
 JOIN Users u 
   ON u.id = p.user_id
 ORDER BY p.publication_date DESC
+
+
+DROP TABLE Users;
+DROP TABLE Categories;
+DROP TABLE Posts;
+
+INSERT INTO Posts VALUES (null, 1, 2, 'The Best Places to Visit in Europe', '04/23/2023', 'Europe is full of beautiful destinations that are waiting to be explored. In this post, we will discuss some of the best places to visit in Europe, including Paris, Rome, and Barcelona.');
+INSERT INTO Posts VALUES (null, 2, 3, 'My Morning Routine', '04/22/2023', 'I wake up early every morning and start my day with a cup of coffee and a quick workout. Then, I spend some time meditating and journaling before starting work. Here is a more detailed breakdown of my morning routine.');
+INSERT INTO Posts VALUES (null, 3, 1, 'How to Stay Productive When Working from Home', '04/21/2023', 'Working from home can be challenging, especially if you have trouble staying focused. In this post, we will share some tips and tricks for staying productive when working from home, including setting up a dedicated workspace and using time-blocking techniques.');
+INSERT INTO Posts VALUES (null, 2, 2, 'Summer Vacation Ideas', '5/1/2023', 'Looking for some great ideas for your summer vacation? Check out these top destinations!');
+INSERT INTO Posts VALUES (null, 3, 1, 'New Product Launch', '3/15/2023', 'Introducing our latest product, now available for purchase!');
+INSERT INTO Posts VALUES (null, 2, 3, 'Healthy Eating Tips', '2/5/2023', 'Learn how to make simple changes to your diet that can have a big impact on your health.');
+INSERT INTO Posts VALUES (null, 4, 2, 'Home Improvement Projects', '4/20/2023', 'Ready to tackle some DIY projects around the house? Here are some ideas to get you started.');
+INSERT INTO Posts VALUES (null, 3, 1, 'Company News', '1/1/2023', 'We are excited to announce our latest company milestone!');
+INSERT INTO Posts VALUES (null, 4, 3, 'Travel Hacks', '6/1/2023', 'Save money and travel smarter with these top travel hacks.');
+INSERT INTO Posts VALUES (null, 5, 2, 'Gardening Tips', '5/15/2023', 'Get your garden ready for summer with these expert tips.');
+INSERT INTO Posts VALUES (null, 2, 1, 'Job Openings', '4/1/2023', 'We are hiring! Check out our latest job openings and apply today.');
+
+INSERT INTO Users VALUES (null, "Googly", "Moogly", "googly@moogly.com", 
+"no", "googly", "password", null, "2023-04-21", 1);
+INSERT INTO Users VALUES (null, "Eric", "Frey", "ericlfrey@elf.com", 
+"just a coder", "elfrey", "elfrey", "NULL", "2023-04-21", 1);
+INSERT INTO Users VALUES (null, "Sarah", "Smith", "sarah.smith@example.com", 
+"Loves to travel and take photos.", "sarahsmith", "password123", null, "2023-04-22", 1);
+INSERT INTO Users VALUES (null, "John", "Doe", "johndoe@example.com", 
+"Tech enthusiast and amateur photographer.", "johndoe", "secret", null, "2023-04-23", 1);
+INSERT INTO Users VALUES (null, "Alice", "Lee", "alicelee@example.com", 
+"Bookworm, coffee addict, and occasional writer.", "alicelee", "mypassword", null, "2023-04-24", 1);
+
+INSERT INTO Categories VALUES (null, 'General');
+INSERT INTO Categories VALUES (null, 'Travel');
+INSERT INTO Categories VALUES (null, 'Lifestyle');
