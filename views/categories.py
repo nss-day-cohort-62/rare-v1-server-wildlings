@@ -14,8 +14,8 @@ def get_all_categories():
         # Write the SQL query to get the information you want
         db_cursor.execute("""
         SELECT 
-          c.id,
-          c.label
+            c.id,
+            c.label
         FROM categories c
         ORDER BY c.label ASC
         """)
