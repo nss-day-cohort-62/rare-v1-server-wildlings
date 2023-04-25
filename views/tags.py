@@ -17,7 +17,7 @@ def get_all_tags():
           t.id,
           t.label
         FROM tags t
-        ORDER BY t.label ASC
+        ORDER BY t.label COLLATE NOCASE ASC
         """)
 
         # Initialize an empty list to hold all customer representations
@@ -37,3 +37,21 @@ def get_all_tags():
             tags.append(tag.__dict__)
 
     return tags
+
+
+def create_tag(new_tag):
+    '''create new tag'''
+    with sqlite3.connect("./db.sqlite3") as conn:
+        # conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Tags
+            (label)
+        VALUES
+            ( ? );
+        """, (new_tag['label'], ))
+        id = db_cursor.lastrowid
+        new_tag['id'] = id
+
+    return new_tag
