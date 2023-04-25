@@ -58,9 +58,9 @@ def get_all_posts():
 
             category = Category(row["category_id"], row["label"])
 
-            user = User(row["user_id"], row["first_name"], row["last_name"], row["email"], row["bio"], 
+            user = User(row["user_id"], row["first_name"], row["last_name"], row["email"], row["bio"],
                         row["username"], row["password"], row["profile_image_url"], row["created_on"], row["active"])
-            
+
             post.category = category.__dict__
 
             post.user = user.__dict__
@@ -68,6 +68,7 @@ def get_all_posts():
             posts.append(post.__dict__)
 
     return posts
+
 
 def get_single_post(id):
     """get a single post"""
@@ -104,7 +105,7 @@ def get_single_post(id):
             ON u.id = p.user_id
         WHERE p.id = ?
         ORDER BY p.publication_date DESC 
-        """, ( id , ))
+        """, (id, ))
 
         # Convert rows of data into a Python list
         data = db_cursor.fetchone()
@@ -122,12 +123,29 @@ def get_single_post(id):
 
         category = Category(data["category_id"], data["label"])
 
-        user = User(data["user_id"], data["first_name"], data["last_name"], data["email"], data["bio"], 
+        user = User(data["user_id"], data["first_name"], data["last_name"], data["email"], data["bio"],
                     data["username"], data["password"], data["profile_image_url"], data["created_on"], data["active"])
-        
+
         post.category = category.__dict__
 
         post.user = user.__dict__
 
-
     return post.__dict__
+
+
+def create_post(new_post):
+    '''create a new post'''
+
+    with sqlite3.connect("./db.sqlite3") as conn:
+        # conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Posts ( user_id, category_id, title, publication_date, content)
+        VALUES
+        ( ?,?,?,?,?)""", (new_post["user_id"], new_post["category_id"], new_post["title"], new_post["publication_date"], new_post["content"]))
+
+        id = db_cursor.lastrowid
+        new_post['id'] = id
+
+    return new_post
