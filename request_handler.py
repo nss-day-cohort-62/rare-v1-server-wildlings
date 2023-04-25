@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
-from views import get_all_posts, get_single_post, get_all_categories, get_all_tags
+from views import get_all_posts, get_single_post, get_all_categories, create_category, get_all_tags
 from views.user import create_user, login_user
 
 
@@ -102,12 +102,16 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        (resource, id, query_params) = self.parse_url(self.path)
+        (resource, _, _) = self.parse_url(self.path)
 
+        new_category = None
         if resource == 'login':
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'categories':
+            new_category = create_category(post_body)
+            self.wfile.write(json.dumps(new_category).encode())
 
         self.wfile.write(response.encode())
 
