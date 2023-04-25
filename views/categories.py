@@ -17,7 +17,7 @@ def get_all_categories():
             c.id,
             c.label
         FROM categories c
-        ORDER BY c.label ASC
+        ORDER BY c.label COLLATE NOCASE ASC
         """)
 
         # Initialize an empty list to hold all customer representations
@@ -37,6 +37,7 @@ def get_all_categories():
             categories.append(category.__dict__)
 
     return categories
+
 
 def create_category(new_category):
     '''create new category'''
