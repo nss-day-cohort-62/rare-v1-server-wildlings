@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
-from views import get_all_posts, get_single_post, get_all_categories, create_category, get_all_tags, create_tag
+from views import get_all_posts, get_single_post, get_all_categories, create_category, get_all_tags, create_tag, create_post
 from views.user import create_user, login_user
 
 
@@ -106,6 +106,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         new_category = None
         new_tag = None
+        new_post = None
         if resource == 'login':
             response = login_user(post_body)
         if resource == 'register':
@@ -116,6 +117,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'tags':
             new_tag = create_tag(post_body)
             self.wfile.write(json.dumps(new_tag).encode())
+        if resource == 'posts':
+            new_post = create_post(post_body)
+            self.wfile.write(json.dumps(new_post).encode())
 
         self.wfile.write(response.encode())
 
