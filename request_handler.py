@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
-from views import get_all_posts, get_single_post, get_all_categories
+from views import get_all_posts, get_single_post, get_all_categories, get_all_tags
 from views.user import create_user, login_user
 
 
@@ -81,6 +81,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
                 else:
                     response = get_all_categories()
+            if resource == "tags":
+                if id is not None:
+                    pass
+
+                else:
+                    response = get_all_tags()
 
         else:  # There is a ? in the path, run the query param functions
             (resource, id, query_params) = parsed
