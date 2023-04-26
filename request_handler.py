@@ -66,33 +66,26 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
 
         # If the path does not include a query parameter, continue with the original if block
-        if '?' not in self.path:
-            (resource, id, _) = parsed
+        (resource, id, query_params) = parsed
 
-            if resource == "posts":
-                if id is not None:
-                    response = get_single_post(id)
+        if resource == "posts":
+            if id is not None:
+                response = get_single_post(id)
 
-                else:
-                    response = get_all_posts()
-            if resource == "categories":
-                if id is not None:
-                    pass
+            else:
+                response = get_all_posts(query_params)
+        if resource == "categories":
+            if id is not None:
+                pass
 
-                else:
-                    response = get_all_categories()
-            if resource == "tags":
-                if id is not None:
-                    pass
+            else:
+                response = get_all_categories()
+        if resource == "tags":
+            if id is not None:
+                pass
 
-                else:
-                    response = get_all_tags()
-
-        else:  # There is a ? in the path, run the query param functions
-            (resource, id, _) = parsed
-            pass
-            # if resource == 'animals':
-            #     response = get_all_animals(query_params)
+            else:
+                response = get_all_tags()
 
         self.wfile.write(json.dumps(response).encode())
 
