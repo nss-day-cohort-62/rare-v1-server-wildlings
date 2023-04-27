@@ -91,29 +91,37 @@ def get_single_post(id):
 
         # Write the SQL query to get the information you want
         db_cursor.execute("""
-        SELECT 
-            p.id,
-            p.title,
-            p.publication_date,
-            p.content,
-            c.id category_id,
-            c.label,
-            u.id user_id,
-            u.first_name,
-            u.last_name,
-            u.email,
-            u.bio,
-            u.username,
-            u.password,
-            u.profile_image_url,
-            u.created_on,
-            u.active
+        SELECT DISTINCT
+        p.id,
+        p.title,
+        p.publication_date,
+        p.content,
+        c.id category_id,
+        c.label,
+        u.id user_id,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        u.profile_image_url,
+        u.created_on,
+        u.active,
+        (SELECT GROUP_CONCAT(t.label)
+            FROM PostTags pt
+            JOIN Tags t on pt.tag_id = t.id
+            WHERE pt.post_id = p.id) as tags
         FROM Posts p 
         JOIN Categories c 
             ON c.id = p.category_id
         JOIN Users u 
             ON u.id = p.user_id
-        WHERE p.id = ?
+        JOIN PostTags pt 
+            ON p.id = pt.post_id
+        JOIN Tags t 
+            ON pt.tag_id = t.id
+        WHERE p.user_id = ?
         ORDER BY p.publication_date DESC 
         """, (id, ))
 
@@ -135,6 +143,15 @@ def get_single_post(id):
 
         user = User(data["user_id"], data["first_name"], data["last_name"], data["email"], data["bio"],
                     data["username"], data["password"], data["profile_image_url"], data["created_on"], data["active"])
+        
+        tag_ids = data['tags'].split(",") if data["tags"] else []
+
+        tags = []
+
+        for tag in tag_ids:
+            tags.append(tag)
+
+        post.tag = tags
 
         post.category = category.__dict__
 
