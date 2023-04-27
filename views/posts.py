@@ -225,11 +225,10 @@ def update_post(id, new_post):
         DELETE FROM PostTags
             WHERE post_id = ?
         """, (id,), )
-        for tag in new_post['tag']:
-            tag_id = tag['id']
+        for tag_id in new_post['tag']:
             db_cursor.execute("""
             INSERT INTO PostTags (post_id, tag_id) VALUES (?,?)
-            """, (id, tag_id , ))
+            """, (id,  tag_id), )
     if rows_affected == 0:
         # Forces 404 response by main module
         return False
