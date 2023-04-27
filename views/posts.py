@@ -1,5 +1,6 @@
 import sqlite3
 from models import Post, Category, User
+from .tags import get_single_tag
 
 
 def get_all_posts(query_params):
@@ -91,28 +92,36 @@ def get_single_post(id):
 
         # Write the SQL query to get the information you want
         db_cursor.execute("""
-        SELECT 
-            p.id,
-            p.title,
-            p.publication_date,
-            p.content,
-            c.id category_id,
-            c.label,
-            u.id user_id,
-            u.first_name,
-            u.last_name,
-            u.email,
-            u.bio,
-            u.username,
-            u.password,
-            u.profile_image_url,
-            u.created_on,
-            u.active
+        SELECT DISTINCT
+        p.id,
+        p.title,
+        p.publication_date,
+        p.content,
+        c.id category_id,
+        c.label,
+        u.id user_id,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        u.profile_image_url,
+        u.created_on,
+        u.active,
+        (SELECT GROUP_CONCAT(t.id)
+            FROM PostTags pt
+            JOIN Tags t on pt.tag_id = t.id
+            WHERE pt.post_id = p.id) as tags
         FROM Posts p 
         JOIN Categories c 
             ON c.id = p.category_id
         JOIN Users u 
             ON u.id = p.user_id
+        JOIN PostTags pt 
+            ON p.id = pt.post_id
+        JOIN Tags t 
+            ON pt.tag_id = t.id
         WHERE p.id = ?
         ORDER BY p.publication_date DESC 
         """, (id, ))
@@ -135,6 +144,16 @@ def get_single_post(id):
 
         user = User(data["user_id"], data["first_name"], data["last_name"], data["email"], data["bio"],
                     data["username"], data["password"], data["profile_image_url"], data["created_on"], data["active"])
+        
+        tag_ids = data['tags'].split(",") if data["tags"] else []
+
+        tags = []
+
+        for tag in tag_ids:
+            tagObj = get_single_tag(tag)
+            tags.append(tagObj)
+
+        post.tag = tags
 
         post.category = category.__dict__
 
@@ -157,6 +176,12 @@ def create_post(new_post):
 
         id = db_cursor.lastrowid
         new_post['id'] = id
+
+        for tag_id in new_post['tag']:
+            db_cursor.execute("""
+            INSERT INTO PostTags (post_id, tag_id) VALUES (?,?)
+            """, (id,  tag_id), )
+
 
     return new_post
 
@@ -196,7 +221,14 @@ def update_post(id, new_post):
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
-
+        db_cursor.execute("""
+        DELETE FROM PostTags
+            WHERE post_id = ?
+        """, (id,), )
+        for tag_id in new_post['tag']:
+            db_cursor.execute("""
+            INSERT INTO PostTags (post_id, tag_id) VALUES (?,?)
+            """, (id,  tag_id), )
     if rows_affected == 0:
         # Forces 404 response by main module
         return False
