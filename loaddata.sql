@@ -87,6 +87,9 @@ CREATE TABLE "Categories" (
 
 
 INSERT INTO Tags ('label') VALUES ('JavaScript');
+INSERT INTO Tags VALUES (2, 'Coffee');
+INSERT INTO Tags VALUES (3, 'Toast');
+INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
 DROP TABLE Users;
@@ -173,9 +176,9 @@ INSERT INTO Tags ('label') VALUES ('React');
 INSERT INTO Tags ('label') VALUES ('Python');
 INSERT INTO Tags ('label') VALUES ('IceCream');
 
-INSERT INTO PostTags VALUES (null, 12, 2);
-INSERT INTO PostTags VALUES (null, 12, 3);
-INSERT INTO PostTags VALUES (null, 12, 1);
+INSERT INTO PostTags VALUES (null, 1, 2);
+INSERT INTO PostTags VALUES (null, 1, 3);
+INSERT INTO PostTags VALUES (null, 1, 1);
 
 SELECT * FROM PostTags;
 
@@ -196,7 +199,7 @@ SELECT DISTINCT
   u.profile_image_url,
   u.created_on,
   u.active,
-  (SELECT GROUP_CONCAT(t.label)
+  (SELECT GROUP_CONCAT(t.id)
     FROM PostTags pt
     JOIN Tags t on pt.tag_id = t.id
     WHERE pt.post_id = p.id) as tags
@@ -209,6 +212,12 @@ SELECT DISTINCT
       ON p.id = pt.post_id
   JOIN Tags t 
       ON pt.tag_id = t.id
-  WHERE p.user_id = 1
   ORDER BY p.publication_date DESC 
         
+DELETE FROM PostTags
+    WHERE post_id = post_id;
+INSERT INTO PostTags (post_id, tag_id) VALUES (12,1);
+
+DELETE FROM PostTags
+    WHERE post_id = id;
+INSERT INTO PostTags (id, post_id, tag_id) VALUES (1,1,3)

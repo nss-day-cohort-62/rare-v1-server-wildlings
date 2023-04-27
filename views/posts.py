@@ -1,5 +1,6 @@
 import sqlite3
 from models import Post, Category, User
+from .tags import get_single_tag
 
 
 def get_all_posts(query_params):
@@ -108,7 +109,7 @@ def get_single_post(id):
         u.profile_image_url,
         u.created_on,
         u.active,
-        (SELECT GROUP_CONCAT(t.label)
+        (SELECT GROUP_CONCAT(t.id)
             FROM PostTags pt
             JOIN Tags t on pt.tag_id = t.id
             WHERE pt.post_id = p.id) as tags
@@ -121,7 +122,7 @@ def get_single_post(id):
             ON p.id = pt.post_id
         JOIN Tags t 
             ON pt.tag_id = t.id
-        WHERE p.user_id = ?
+        WHERE p.id = ?
         ORDER BY p.publication_date DESC 
         """, (id, ))
 
@@ -149,7 +150,8 @@ def get_single_post(id):
         tags = []
 
         for tag in tag_ids:
-            tags.append(tag)
+            tagObj = get_single_tag(tag)
+            tags.append(tagObj)
 
         post.tag = tags
 
@@ -174,6 +176,12 @@ def create_post(new_post):
 
         id = db_cursor.lastrowid
         new_post['id'] = id
+
+        for tag_id in new_post['tag']:
+            db_cursor.execute("""
+            INSERT INTO PostTags (post_id, tag_id) VALUES (?,?)
+            """, (id,  tag_id), )
+
 
     return new_post
 
@@ -213,7 +221,15 @@ def update_post(id, new_post):
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
-
+        db_cursor.execute("""
+        DELETE FROM PostTags
+            WHERE post_id = ?
+        """, (id,), )
+        for tag in new_post['tag']:
+            tag_id = tag['id']
+            db_cursor.execute("""
+            INSERT INTO PostTags (post_id, tag_id) VALUES (?,?)
+            """, (id, tag_id , ))
     if rows_affected == 0:
         # Forces 404 response by main module
         return False
